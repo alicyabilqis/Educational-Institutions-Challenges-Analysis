@@ -4,11 +4,7 @@ import numpy as np
 import joblib
 from sklearn.preprocessing import StandardScaler
 
-# Load the saved model and scaler
-try:
-    model = joblib.load('model_rf_top_features.joblib')
-    scaler = joblib.load('scaler_top_features.joblib')
-
+# Define top features list (outside try block)
 top_features_list = [
     'Curricular_units_2nd_sem_approved',
     'Curricular_units_2nd_sem_grade',
@@ -22,14 +18,16 @@ top_features_list = [
     'Curricular_units_1st_sem_evaluations'
 ]
 
-
+# Load the saved model and scaler
+try:
+    model = joblib.load('model_rf_top_features.joblib')
+    scaler = joblib.load('scaler_top_features.joblib')
 except FileNotFoundError:
     st.error("Model or scaler file not found. Please ensure 'model_rf_top_features.joblib' and 'scaler_top_features.joblib' exist.")
     st.stop()
 except Exception as e:
     st.error(f"Error loading model or scaler: {e}")
     st.stop()
-
 
 # Title of the app
 st.title("Student Dropout/Graduation Predictor")
