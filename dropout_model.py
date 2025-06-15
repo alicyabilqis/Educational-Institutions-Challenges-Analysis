@@ -45,7 +45,7 @@ course_descriptions = {
 }
 
 st.set_page_config(page_title="Student Dropout Predictor", layout="centered")
-st.title('🎓 Early Detection of Student Dropout Risk')
+st.title('Early Detection of Student Dropout Risk')
 
 st.write(
     """School dropout remains a serious challenge in education.  
