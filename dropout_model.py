@@ -45,12 +45,6 @@ st.sidebar.header("Input Student Data")
 # Dictionary to hold input data
 input_data = {}
 
-# Create input fields for each of the top features
-# You need to know the expected data type and range for each feature
-
-# Example input fields (adjust based on your feature types and ranges)
-# Refer back to your data understanding and EDA to set appropriate min/max values for numerical inputs
-
 input_data['Curricular_units_2nd_sem_approved'] = st.sidebar.number_input(
     'Curricular Units Approved in 2nd Sem',
     min_value=0, value=5, step=1
