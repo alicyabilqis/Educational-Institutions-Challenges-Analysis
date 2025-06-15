@@ -1,134 +1,140 @@
 import streamlit as st
-import joblib
 import pandas as pd
+import numpy as np
+import joblib
+from sklearn.preprocessing import StandardScaler
 
-# Load model & scaler
-model_rf = joblib.load('model_rf.joblib')
-scaler = joblib.load('scaler.joblib')
+# Load the saved model and scaler
+try:
+    model = joblib.load('model_rf_top_features.joblib')
+    scaler = joblib.load('scaler_top_features.joblib')
+    # Load the list of top features used during training
+    # Assuming you saved the top features list, if not, you might need to hardcode it or save it
+    # For now, let's extract feature names from the scaler's fitted data or assume it's the same as the top_features list from training
+    # A more robust way is to save the feature names along with the scaler/model
+    # For this example, let's assume the order and names of top features are consistent with the training code.
+    # You should ideally save this list during your model training phase.
+    # Example: joblib.dump(top_features, 'top_features_list.joblib')
+    # And load it here: top_features_list = joblib.load('top_features_list.joblib')
 
-st.set_page_config(page_title="Student Dropout Predictor", layout="centered")
-st.title('Early Detection of Student Dropout Risk')
+    # Hardcoding the top features based on the training code's output (adjust if your top features change)
+    # It's crucial that the features used for prediction match the features the model was trained on
+    top_features_list = ['Curricular_units_2nd_sem_approved', 'Curricular_units_1st_sem_approved',
+                         'Curricular_units_2nd_sem_grade', 'Curricular_units_1st_sem_grade',
+                         'Application_mode', 'Previous_qualification_grade', 'Age_at_enrollment',
+                         'Admission_grade', 'Curricular_units_1st_sem_evaluations',
+                         'Curricular_units_2nd_sem_evaluations']
 
-st.write("This app predicts the risk of a student dropping out based on selected academic indicators.")
 
-# --- Course dictionary ---
-course_descriptions = {
-    33: 'Biofuel Production Technologies',
-    171: 'Animation and Multimedia Design',
-    8014: 'Social Service (Evening)',
-    9003: 'Agronomy',
-    9070: 'Communication Design',
-    9085: 'Veterinary Nursing',
-    9119: 'Informatics Engineering',
-    9130: 'Equinculture',
-    9147: 'Management',
-    9238: 'Social Service',
-    9254: 'Tourism',
-    9500: 'Nursing',
-    9556: 'Oral Hygiene',
-    9670: 'Advertising and Marketing Management',
-    9773: 'Journalism and Communication',
-    9853: 'Basic Education',
-    9991: 'Management (Evening)'
-}
+except FileNotFoundError:
+    st.error("Model or scaler file not found. Please ensure 'model_rf_top_features.joblib' and 'scaler_top_features.joblib' exist.")
+    st.stop()
+except Exception as e:
+    st.error(f"Error loading model or scaler: {e}")
+    st.stop()
 
-# --- Feature Names (full list for model input order) ---
-feature_names = [
-    'Marital_status', 'Application_mode', 'Application_order', 'Course', 'Daytime_evening_attendance',
-    'Previous_qualification', 'Previous_qualification_grade', 'Nacionality', 'Mothers_qualification',
-    'Fathers_qualification', 'Mothers_occupation', 'Fathers_occupation', 'Admission_grade', 'Displaced',
-    'Educational_special_needs', 'Debtor', 'Tuition_fees_up_to_date', 'Gender', 'Scholarship_holder',
-    'Age_at_enrollment', 'International', 'Curricular_units_1st_sem_credited', 'Curricular_units_1st_sem_enrolled',
-    'Curricular_units_1st_sem_evaluations', 'Curricular_units_1st_sem_approved', 'Curricular_units_1st_sem_grade',
-    'Curricular_units_1st_sem_without_evaluations', 'Curricular_units_2nd_sem_credited',
-    'Curricular_units_2nd_sem_enrolled', 'Curricular_units_2nd_sem_evaluations',
-    'Curricular_units_2nd_sem_approved', 'Curricular_units_2nd_sem_grade',
-    'Curricular_units_2nd_sem_without_evaluations', 'Unemployment_rate', 'Inflation_rate', 'GDP'
-]
 
-# --- Streamlit Form ---
-with st.form("student_form"):
-    st.subheader("📝 Input Student Data")
+# Title of the app
+st.title("Student Dropout/Graduation Predictor")
 
-    age = st.number_input("Age at Enrollment", min_value=15, max_value=70, value=18, step=1)
-    admission_grade = st.number_input("Admission Grade (0–16)", min_value=0.0, max_value=16.0, value=12.0, step=0.1)
-    course_code = st.number_input("Course Code", min_value=0, step=1)
+st.write("""
+This app predicts whether a student is likely to **Graduate** or **Dropout**
+based on key academic and personal factors.
+""")
 
-    if course_code in course_descriptions:
-        st.info(f"Selected Course: **{course_descriptions[course_code]}**")
-    else:
-        st.warning("⚠️ Unknown Course Code")
+# Sidebar for user input
+st.sidebar.header("Input Student Data")
 
-    tuition_paid = st.selectbox("Tuition Fees Up To Date", [1, 0], format_func=lambda x: 'Yes' if x == 1 else 'No')
+# Dictionary to hold input data
+input_data = {}
 
-    cu1_approved = st.number_input("1st Sem: Units Approved", min_value=0, max_value=30, value=5, step=1)
-    cu1_grade = st.number_input("1st Sem: Avg Grade (0–16)", min_value=0.0, max_value=16.0, value=10.0, step=0.1)
-    cu1_evaluations = st.number_input("1st Sem: Evaluations Taken", min_value=0, max_value=33, value=6, step=1)
+# Create input fields for each of the top features
+# You need to know the expected data type and range for each feature
 
-    cu2_approved = st.number_input("2nd Sem: Units Approved", min_value=0, max_value=30, value=4, step=1)
-    cu2_grade = st.number_input("2nd Sem: Avg Grade (0–16)", min_value=0.0, max_value=16.0, value=9.0, step=0.1)
-    cu2_evaluations = st.number_input("2nd Sem: Evaluations Taken", min_value=0, max_value=33, value=5, step=1)
+# Example input fields (adjust based on your feature types and ranges)
+# Refer back to your data understanding and EDA to set appropriate min/max values for numerical inputs
 
-    submitted = st.form_submit_button("🔍 Predict Dropout Risk")
+input_data['Curricular_units_2nd_sem_approved'] = st.sidebar.number_input(
+    'Curricular Units Approved in 2nd Sem',
+    min_value=0, value=5, step=1
+)
+input_data['Curricular_units_1st_sem_approved'] = st.sidebar.number_input(
+    'Curricular Units Approved in 1st Sem',
+    min_value=0, value=5, step=1
+)
+input_data['Curricular_units_2nd_sem_grade'] = st.sidebar.number_input(
+    'Average Grade in 2nd Sem (0-200)',
+    min_value=0.0, max_value=200.0, value=120.0, step=0.1
+)
+input_data['Curricular_units_1st_sem_grade'] = st.sidebar.number_input(
+    'Average Grade in 1st Sem (0-200)',
+    min_value=0.0, max_value=200.0, value=120.0, step=0.1
+)
+input_data['Application_mode'] = st.sidebar.number_input(
+    'Application Mode (Numerical Code)',
+    min_value=1, value=1, step=1
+)
+input_data['Previous_qualification_grade'] = st.sidebar.number_input(
+    'Previous Qualification Grade (0-200)',
+    min_value=0.0, max_value=200.0, value=130.0, step=0.1
+)
+input_data['Age_at_enrollment'] = st.sidebar.number_input(
+    'Age at Enrollment (Years)',
+    min_value=17, value=18, step=1
+)
+input_data['Admission_grade'] = st.sidebar.number_input(
+    'Admission Grade (0-200)',
+    min_value=0.0, max_value=200.0, value=130.0, step=0.1
+)
+input_data['Curricular_units_1st_sem_evaluations'] = st.sidebar.number_input(
+    'Curricular Units Evaluated in 1st Sem',
+    min_value=0, value=6, step=1
+)
+input_data['Curricular_units_2nd_sem_evaluations'] = st.sidebar.number_input(
+    'Curricular Units Evaluated in 2nd Sem',
+    min_value=0, value=6, step=1
+)
 
-    if submitted:
-        # --- Default values for unused features ---
-        default_values = {
-            'Marital_status': 1,
-            'Application_mode': 1,
-            'Application_order': 1,
-            'Daytime_evening_attendance': 1,
-            'Previous_qualification': 1,
-            'Previous_qualification_grade': 12.0,
-            'Nacionality': 1,
-            'Mothers_qualification': 1,
-            'Fathers_qualification': 1,
-            'Mothers_occupation': 1,
-            'Fathers_occupation': 1,
-            'Displaced': 0,
-            'Educational_special_needs': 0,
-            'Debtor': 0,
-            'Gender': 1,
-            'Scholarship_holder': 0,
-            'International': 0,
-            'Curricular_units_1st_sem_credited': 0,
-            'Curricular_units_1st_sem_without_evaluations': 0,
-            'Curricular_units_2nd_sem_credited': 0,
-            'Curricular_units_2nd_sem_without_evaluations': 0,
-            'Unemployment_rate': 6.5,
-            'Inflation_rate': 1.5,
-            'GDP': 2.0
-        }
 
-        # --- Input dictionary (merge manual + user inputs) ---
-        input_data = {
-            'Course': course_code,
-            'Admission_grade': admission_grade,
-            'Tuition_fees_up_to_date': tuition_paid,
-            'Age_at_enrollment': age,
-            'Curricular_units_1st_sem_enrolled': cu1_approved + 1,
-            'Curricular_units_1st_sem_evaluations': cu1_evaluations,
-            'Curricular_units_1st_sem_approved': cu1_approved,
-            'Curricular_units_1st_sem_grade': cu1_grade,
-            'Curricular_units_2nd_sem_enrolled': cu2_approved + 1,
-            'Curricular_units_2nd_sem_evaluations': cu2_evaluations,
-            'Curricular_units_2nd_sem_approved': cu2_approved,
-            'Curricular_units_2nd_sem_grade': cu2_grade
-        }
+# Create a DataFrame from the input data, ensuring the column order matches the training data
+# It's essential that the column order is correct for the scaler and the model
+input_df = pd.DataFrame([input_data])
 
-        input_dict = {**default_values, **input_data}
-        input_df = pd.DataFrame([input_dict])[feature_names]  # Ensure column order matches model
+# Ensure the order of columns in input_df matches the top_features_list
+input_df = input_df[top_features_list]
 
-        # --- Predict ---
-        scaled = scaler.transform(input_df)
-        prediction = model_rf.predict(scaled)[0]
-        proba = model_rf.predict_proba(scaled)[0]
+# Scale the input data
+scaled_input = scaler.transform(input_df)
 
-        st.subheader("🎯 Prediction Result:")
-        if prediction == 1:
-            st.success("✅ The student is predicted to **Graduate**.")
+# Make prediction
+if st.sidebar.button('Predict Status'):
+    try:
+        prediction = model.predict(scaled_input)
+        prediction_proba = model.predict_proba(scaled_input)
+
+        # Map prediction output back to original labels
+        # Remember: 1 was mapped to 'Graduate', 0 to 'Dropout'
+        status_mapping = {1: 'Graduate', 0: 'Dropout'}
+        predicted_status = status_mapping[prediction[0]]
+
+        st.subheader("Prediction Result")
+
+        if predicted_status == 'Graduate':
+            st.success(f"The student is predicted to **{predicted_status}**.")
+            # Show probability for graduate
+            prob_graduate = prediction_proba[0][1] # Probability for class 1 (Graduate)
+            st.write(f"Confidence: {prob_graduate:.2f}")
         else:
-            st.error("⚠️ The student is at risk of **Dropping Out**.")
+            st.error(f"The student is predicted to **{predicted_status}**.")
+            # Show probability for dropout
+            prob_dropout = prediction_proba[0][0] # Probability for class 0 (Dropout)
+            st.write(f"Confidence: {prob_dropout:.2f}")
 
-        st.write("📊 Prediction Probabilities:")
-        st.write(f"Dropout: {proba[0]:.2%} | Graduate: {proba[1]:.2%}")
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {e}")
+
+st.markdown("---")
+st.write("""
+*Note: This prediction is based on a machine learning model trained on a specific dataset.
+The results should be interpreted as a probability and not a definitive outcome.*
+""")
