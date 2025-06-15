@@ -24,9 +24,10 @@ feature_names = ['Marital_status', 'Application_mode', 'Application_order', 'Cou
                  'Curricular_units_2nd_sem_without_evaluations', 'Unemployment_rate',
                  'Inflation_rate', 'GDP']
 
-st.title('Prediksi Status Kelulusan Mahasiswa')
+st.title('Early Detection of Student Dropout Tendencies Through Predictive Modeling)
 
-st.write('Masukkan informasi mahasiswa untuk memprediksi status kelulusan (Dropout/Graduate).')
+st.write('School dropout remains a serious challenge in education. To help address this issue, this prediction model was developed to identify students who are at risk of dropping out.
+By analyzing student data, the model can detect patterns that indicate potential risk early on. The predictions are intended to support schools in taking timely and appropriate actions to help students stay in school and complete their education.')
 
 # Create input fields for the features
 # You'll need to create input widgets for each feature in `feature_names`
