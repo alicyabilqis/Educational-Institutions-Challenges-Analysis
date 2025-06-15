@@ -8,7 +8,7 @@ model_rf = joblib.load('model_rf.joblib')
 scaler = joblib.load('scaler.joblib')
 
 st.set_page_config(page_title="Student Dropout Predictor", layout="centered")
-st.title('🎓 Early Detection of Student Dropout Risk')
+st.title('Early Detection of Student Dropout Risk')
 
 st.write("This app predicts the risk of a student dropping out based on key academic indicators.")
 
