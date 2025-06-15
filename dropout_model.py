@@ -47,17 +47,44 @@ st.markdown("---")
 
 # Feature order for model
 feature_names = [
-    'Age_at_enrollment',
-    'Admission_grade',
+    'Marital_status',
+    'Application_mode',
+    'Application_order',
     'Course',
+    'Daytime_evening_attendance',
+    'Previous_qualification',
+    'Previous_qualification_grade',
+    'Nacionality',
+    'Mothers_qualification',
+    'Fathers_qualification',
+    'Mothers_occupation',
+    'Fathers_occupation',
+    'Admission_grade',
+    'Displaced',
+    'Educational_special_needs',
+    'Debtor',
     'Tuition_fees_up_to_date',
+    'Gender',
+    'Scholarship_holder',
+    'Age_at_enrollment',
+    'International',
+    'Curricular_units_1st_sem_credited',
+    'Curricular_units_1st_sem_enrolled',
+    'Curricular_units_1st_sem_evaluations',
     'Curricular_units_1st_sem_approved',
     'Curricular_units_1st_sem_grade',
-    'Curricular_units_1st_sem_evaluations',
+    'Curricular_units_1st_sem_without_evaluations',
+    'Curricular_units_2nd_sem_credited',
+    'Curricular_units_2nd_sem_enrolled',
+    'Curricular_units_2nd_sem_evaluations',
     'Curricular_units_2nd_sem_approved',
     'Curricular_units_2nd_sem_grade',
-    'Curricular_units_2nd_sem_evaluations'
+    'Curricular_units_2nd_sem_without_evaluations',
+    'Unemployment_rate',
+    'Inflation_rate',
+    'GDP'
 ]
+
 
 with st.form("student_form"):
     st.subheader("📝 Input Student Information")
