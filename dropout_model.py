@@ -27,7 +27,7 @@ feature_names = ['Marital_status', 'Application_mode', 'Application_order', 'Cou
 st.title('Early Detection of Student Dropout Tendencies Through Predictive Modeling')
 
 st.write('School dropout remains a serious challenge in education. To help address this issue, this prediction model was developed to identify students who are at risk of dropping out.')
-st.write(By analyzing student data, the model can detect patterns that indicate potential risk early on. The predictions are intended to support schools in taking timely and appropriate actions to help students stay in school and complete their education.')
+st.write('By analyzing student data, the model can detect patterns that indicate potential risk early on. The predictions are intended to support schools in taking timely and appropriate actions to help students stay in school and complete their education.')
 
 # Create input fields for the features
 # You'll need to create input widgets for each feature in `feature_names`
