@@ -1,13 +1,16 @@
+# student_dropout_predictor_app.py
+
 import streamlit as st
 import joblib
 import pandas as pd
+import numpy as np
 
 # Load model and scaler
 model_rf = joblib.load('model_rf.joblib')
 scaler = joblib.load('scaler.joblib')
 
-# Ordered top features based on your input
-top_features = [
+# Feature order based on top 10 important features
+feature_names = [
     'Age_at_enrollment',
     'Admission_grade',
     'Course',
@@ -20,8 +23,8 @@ top_features = [
     'Curricular_units_2nd_sem_evaluations'
 ]
 
-# Course options with labels
-course_options = {
+# Course code descriptions
+course_descriptions = {
     33: 'Biofuel Production Technologies',
     171: 'Animation and Multimedia Design',
     8014: 'Social Service (Evening)',
@@ -41,74 +44,76 @@ course_options = {
     9991: 'Management (Evening)'
 }
 
-# App Title
-st.title('Student Dropout Risk Prediction')
-st.subheader('Early Detection Through Predictive Modeling')
+st.set_page_config(page_title="Student Dropout Predictor", layout="centered")
+st.title('🎓 Early Detection of Student Dropout Risk')
 
-# Introduction
-st.write("""
-School dropout is a persistent challenge in education systems worldwide.  
-This tool leverages machine learning to help identify students who may be at risk of dropping out.  
-By focusing on the most relevant academic and financial indicators, schools can take early action to support students.
-""")
+st.write(
+    """School dropout remains a serious challenge in education.  
+This prediction model was developed to help identify students at risk of dropping out, enabling early intervention and support."""
+)
 
-# Input fields for the 10 features
-age_at_enrollment = st.number_input('Age at Enrollment', min_value=0, step=1)
-admission_grade = st.number_input('Admission Grade', min_value=0.0, step=0.1)
+with st.form("dropout_form"):
+    st.subheader("📝 Student Information")
 
-# Course selection with descriptions
-course_label = st.selectbox('Course of Study', options=list(course_options.values()))
-course_code = [code for code, name in course_options.items() if name == course_label][0]
+    age = st.number_input("Age at Enrollment", min_value=15, max_value=70, step=1)
+    admission_grade = st.number_input("Admission Grade (0 - 200)", min_value=0.0, max_value=200.0, step=0.1)
 
-tuition_fees_up_to_date = st.selectbox('Tuition Fees Paid (1: Yes, 0: No)', [1, 0])
-curricular_units_1st_sem_approved = st.number_input('1st Semester - Approved Units', min_value=0, step=1)
-curricular_units_1st_sem_grade = st.number_input('1st Semester - Average Grade', min_value=0.0, step=0.1)
-curricular_units_1st_sem_evaluations = st.number_input('1st Semester - Evaluations Taken', min_value=0, step=1)
-curricular_units_2nd_sem_approved = st.number_input('2nd Semester - Approved Units', min_value=0, step=1)
-curricular_units_2nd_sem_grade = st.number_input('2nd Semester - Average Grade', min_value=0.0, step=0.1)
-curricular_units_2nd_sem_evaluations = st.number_input('2nd Semester - Evaluations Taken', min_value=0, step=1)
-
-# Organize inputs into DataFrame
-input_data = pd.DataFrame([{
-    'Age_at_enrollment': age_at_enrollment,
-    'Admission_grade': admission_grade,
-    'Course': course_code,
-    'Tuition_fees_up_to_date': tuition_fees_up_to_date,
-    'Curricular_units_1st_sem_approved': curricular_units_1st_sem_approved,
-    'Curricular_units_1st_sem_grade': curricular_units_1st_sem_grade,
-    'Curricular_units_1st_sem_evaluations': curricular_units_1st_sem_evaluations,
-    'Curricular_units_2nd_sem_approved': curricular_units_2nd_sem_approved,
-    'Curricular_units_2nd_sem_grade': curricular_units_2nd_sem_grade,
-    'Curricular_units_2nd_sem_evaluations': curricular_units_2nd_sem_evaluations
-}])
-
-# Predict button
-if st.button('Predict Status'):
-    # Ensure column order is correct
-    input_data = input_data[top_features]
-
-    # Scale input
-    input_scaled = scaler.transform(input_data)
-
-    # Predict
-    prediction = model_rf.predict(input_scaled)
-    status_labels = {1: 'Graduate', 0: 'Dropout'}
-    predicted_status = status_labels[prediction[0]]
-
-    st.subheader('Prediction Result:')
-    if predicted_status == 'Graduate':
-        st.success(f'The student is predicted to: **{predicted_status}**')
+    course_code = st.number_input("Course Code (numeric)", min_value=0, step=1)
+    if course_code in course_descriptions:
+        st.info(f"**Selected Course:** {course_descriptions[course_code]}")
     else:
-        st.error(f'The student is predicted to: **{predicted_status}**')
+        st.warning("⚠️ Unknown Course Code. Please double-check.")
 
-    # Optional: Show prediction probabilities
-    try:
-        prediction_proba = model_rf.predict_proba(input_scaled)
-        st.write('Prediction Probabilities:')
-        proba_df = pd.DataFrame(prediction_proba, columns=['Dropout Probability', 'Graduate Probability'])
-        st.dataframe(proba_df)
-    except AttributeError:
-        st.info("This model does not provide probability estimates.")
+    tuition_paid = st.selectbox("Tuition Fees Up To Date", [1, 0], format_func=lambda x: 'Yes' if x == 1 else 'No')
 
-# Note
-st.caption("Ensure all fields are completed before running the prediction.")
+    cu1_approved = st.number_input("1st Sem: Curricular Units Approved", min_value=0, step=1)
+    cu1_grade = st.number_input("1st Sem: Average Grade", min_value=0.0, max_value=20.0, step=0.1)
+    cu1_evaluations = st.number_input("1st Sem: Number of Evaluations", min_value=0, step=1)
+
+    cu2_approved = st.number_input("2nd Sem: Curricular Units Approved", min_value=0, step=1)
+    cu2_grade = st.number_input("2nd Sem: Average Grade", min_value=0.0, max_value=20.0, step=0.1)
+    cu2_evaluations = st.number_input("2nd Sem: Number of Evaluations", min_value=0, step=1)
+
+    submitted = st.form_submit_button("🔍 Predict Dropout Status")
+
+    if submitted:
+        # Check for missing or invalid values (simple example)
+        input_values = [age, admission_grade, course_code, tuition_paid, cu1_approved,
+                        cu1_grade, cu1_evaluations, cu2_approved, cu2_grade, cu2_evaluations]
+
+        if any(val is None or (isinstance(val, float) and np.isnan(val)) for val in input_values):
+            st.error("❌ Please fill in all fields correctly.")
+        else:
+            input_dict = {
+                'Age_at_enrollment': age,
+                'Admission_grade': admission_grade,
+                'Course': course_code,
+                'Tuition_fees_up_to_date': tuition_paid,
+                'Curricular_units_1st_sem_approved': cu1_approved,
+                'Curricular_units_1st_sem_grade': cu1_grade,
+                'Curricular_units_1st_sem_evaluations': cu1_evaluations,
+                'Curricular_units_2nd_sem_approved': cu2_approved,
+                'Curricular_units_2nd_sem_grade': cu2_grade,
+                'Curricular_units_2nd_sem_evaluations': cu2_evaluations
+            }
+
+            input_df = pd.DataFrame([input_dict])[feature_names]
+            input_scaled = scaler.transform(input_df)
+            prediction = model_rf.predict(input_scaled)[0]
+
+            labels = {1: 'Graduate', 0: 'Dropout'}
+            pred_label = labels[prediction]
+
+            st.subheader("🎯 Prediction Result:")
+            if pred_label == 'Graduate':
+                st.success(f"The student is predicted to **{pred_label}**.")
+            else:
+                st.error(f"The student is at risk of **{pred_label}**.")
+
+            # Optional: prediction probabilities
+            try:
+                prob = model_rf.predict_proba(input_scaled)[0]
+                st.write("📊 Prediction Probabilities:")
+                st.write(f"Dropout: {prob[0]:.2%}, Graduate: {prob[1]:.2%}")
+            except Exception:
+                pass
