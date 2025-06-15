@@ -22,7 +22,8 @@ top_features = [
 ]
 
 # App Title
-st.title('Early Detection of Student Dropout Tendencies Through Predictive Modeling')
+st.title('Student Dropout Risk Prediction')
+st.subheader('Early Detection Through Predictive Modeling')
 
 # Introduction
 st.write("""
