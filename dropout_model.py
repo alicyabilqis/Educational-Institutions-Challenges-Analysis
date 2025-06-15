@@ -42,7 +42,8 @@ course_options = {
 }
 
 # App Title
-st.title('Predicting Student Dropout Risk Using Key Academic Indicators')
+st.title('Student Dropout Risk Prediction')
+st.subheader('Early Detection Through Predictive Modeling')
 
 # Introduction
 st.write("""
