@@ -8,17 +8,7 @@ from sklearn.preprocessing import StandardScaler
 try:
     model = joblib.load('model_rf_top_features.joblib')
     scaler = joblib.load('scaler_top_features.joblib')
-    # Load the list of top features used during training
-    # Assuming you saved the top features list, if not, you might need to hardcode it or save it
-    # For now, let's extract feature names from the scaler's fitted data or assume it's the same as the top_features list from training
-    # A more robust way is to save the feature names along with the scaler/model
-    # For this example, let's assume the order and names of top features are consistent with the training code.
-    # You should ideally save this list during your model training phase.
-    # Example: joblib.dump(top_features, 'top_features_list.joblib')
-    # And load it here: top_features_list = joblib.load('top_features_list.joblib')
 
-    # Hardcoding the top features based on the training code's output (adjust if your top features change)
-    # It's crucial that the features used for prediction match the features the model was trained on
     top_features_list = ['Curricular_units_2nd_sem_approved', 'Curricular_units_1st_sem_approved',
                          'Curricular_units_2nd_sem_grade', 'Curricular_units_1st_sem_grade',
                          'Application_mode', 'Previous_qualification_grade', 'Age_at_enrollment',
