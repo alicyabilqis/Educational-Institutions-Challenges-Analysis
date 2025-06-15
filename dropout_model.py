@@ -9,11 +9,18 @@ try:
     model = joblib.load('model_rf_top_features.joblib')
     scaler = joblib.load('scaler_top_features.joblib')
 
-    top_features_list = ['Curricular_units_2nd_sem_approved', 'Curricular_units_1st_sem_approved',
-                         'Curricular_units_2nd_sem_grade', 'Curricular_units_1st_sem_grade',
-                         'Application_mode', 'Previous_qualification_grade', 'Age_at_enrollment',
-                         'Admission_grade', 'Curricular_units_1st_sem_evaluations',
-                         'Curricular_units_2nd_sem_evaluations']
+top_features_list = [
+    'Curricular_units_2nd_sem_approved',
+    'Curricular_units_2nd_sem_grade',
+    'Curricular_units_1st_sem_approved',
+    'Curricular_units_1st_sem_grade',
+    'Tuition_fees_up_to_date',
+    'Age_at_enrollment',
+    'Curricular_units_2nd_sem_evaluations',
+    'Admission_grade',
+    'Course',
+    'Curricular_units_1st_sem_evaluations'
+]
 
 
 except FileNotFoundError:
@@ -60,13 +67,8 @@ input_data['Curricular_units_1st_sem_grade'] = st.sidebar.number_input(
     'Average Grade in 1st Sem (0-200)',
     min_value=0.0, max_value=200.0, value=120.0, step=0.1
 )
-input_data['Application_mode'] = st.sidebar.number_input(
-    'Application Mode (Numerical Code)',
-    min_value=1, value=1, step=1
-)
-input_data['Previous_qualification_grade'] = st.sidebar.number_input(
-    'Previous Qualification Grade (0-200)',
-    min_value=0.0, max_value=200.0, value=130.0, step=0.1
+input_data['Tuition_fees_up_to_date'] = st.sidebar.selectbox(
+    'Tuition Fees Up to Date?', options=[0, 1], format_func=lambda x: 'Yes' if x == 1 else 'No'
 )
 input_data['Age_at_enrollment'] = st.sidebar.number_input(
     'Age at Enrollment (Years)',
@@ -83,6 +85,9 @@ input_data['Curricular_units_1st_sem_evaluations'] = st.sidebar.number_input(
 input_data['Curricular_units_2nd_sem_evaluations'] = st.sidebar.number_input(
     'Curricular Units Evaluated in 2nd Sem',
     min_value=0, value=6, step=1
+)
+input_data['Course'] = st.sidebar.number_input(
+    'Course (Numerical Code)', min_value=1, value=1, step=1
 )
 
 
