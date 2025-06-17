@@ -64,7 +64,7 @@ streamlit run app.py
 ## Business Dashboard
 
 #### Visual Summary of Findings
-![Business Dashboard]()
+![Business Dashboard](https://github.com/alicyabilqis/Educational-Institutions-Challenges-Analysis/raw/main/Alicya-dashboard.jpg)
 #### Visual Interpretation
 
 #### Documentation
