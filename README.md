@@ -41,6 +41,26 @@ This project will deliver a data-driven solution for monitoring student performa
 The data used for this analysis was sourced from [students performance data](https://github.com/dicodingacademy/dicoding_dataset/tree/main/students_performance 'Dicoding GitHub - students_performance')
 
 Setup environment :
+1. Clone the Repository
+```sh
+git clone https://github.com/alicyabilqis/HR-Department-Problem-Analysis.git
+```
+2. Create a Virtual Environment
+```sh
+virtualenv venv
+```
+3. Activate the Environment
+```sh
+venv\Scripts\activate
+```
+4. Install Dependencies
+```sh
+pip install -r requirements.txt
+```
+5. Menjalankan app
+```sh
+streamlit run app.py
+```
 ## Business Dashboard
 
 #### Visual Summary of Findings
@@ -50,7 +70,7 @@ Setup environment :
 #### Documentation
 The Business Dashboard is accessible via the following link:
 
-[View the Dashboard]()
+[View the Dashboard](https://lookerstudio.google.com/reporting/8bb1f9df-c52d-468d-8af9-43b153dceb96)
 
 For a detailed explanation of how to interpret and utilize the dashboard please refer to:
 
@@ -59,5 +79,34 @@ For a detailed explanation of how to interpret and utilize the dashboard please 
 ### Business Dashboard
 
 ### Predictive model
+The model has identified a combination of academic performance metrics, administrative status, and demographic factors as key predictors of student dropout. The model shows high sensitivity to students' academic progression—particularly in the first and second semesters—highlighting these early stages as critical intervention points. Financial and enrollment-related variables, such as tuition payment status and age at enrollment, also contribute to dropout risk but to a lesser extent.
 
+The model's top predictors are strongly academic in nature, especially:
+* The number of courses passed and grades in both semesters,
+* The evaluation load in each term, and
+* The student’s academic background prior to enrollment.
+
+This suggests that student success in the first year is the most important period for retention and support efforts.
 ### Recommended Actions
+To reduce dropout rates effectively, educational institutions should implement a combination of academic, financial, and structural interventions targeting the top predictors:
+
+1. Academic Monitoring and Intervention
+   * Create real-time dashboards to flag students with low pass rates or declining grades.
+   * Offer personalized academic support including mentoring, tutoring, and academic coaching—especially for students underperforming in the first and second semesters.
+   * Integrate remedial or recovery programs (e.g., modular repeats or summer classes) for students falling behind.
+
+2. Curriculum and Assessment Management
+   * Evaluate and optimize the number and type of assessments in early semesters to avoid overburdening students.
+   * Encourage continuous and formative assessments rather than high-stakes exams.
+
+3. Financial Support Mechanisms
+   * Set up early alerts for students falling behind on tuition payments and connect them with financial aid advisors.
+   * Provide flexible payment plans and establish emergency grant programs to alleviate financial stress.
+
+4. Support for Non-Traditional Students
+   * Offer flexible course formats (evening, online, or hybrid) for older students or those with non-academic obligations.
+   * Facilitate peer communities based on age groups or personal responsibilities to strengthen belonging and motivation.
+
+5. Pre-University Preparation
+   * Use admission grades as a baseline to assign at-risk students to bridging or academic success programs.
+   * Implement diagnostic assessments at the beginning of the academic year to tailor support services to student needs.
