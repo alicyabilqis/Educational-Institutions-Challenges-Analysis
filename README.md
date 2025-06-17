@@ -84,9 +84,13 @@ The Business Dashboard is accessible via the following link:
 
 [View the Dashboard](https://lookerstudio.google.com/reporting/8bb1f9df-c52d-468d-8af9-43b153dceb96)
 
-For a detailed explanation of how to interpret and utilize the dashboard please refer to:
+For a detailed explanation of how to interpret and utilize the dashboard and detailed explanation of how to run and use the predictive model, please refer to:
 
-[View the Video]()
+[View the Video](https://drive.google.com/file/d/1Z1fs-cgDznFc0qV9ydOC45Cw_Qj62DPY/view?usp=sharing)
+
+To interact with and test the predictive model, please refer to the following link:
+
+[View the Prediction Model](https://educational-institutions-challenges-analysis-abr8mnmkwfjv3r3fy.streamlit.app/)
 ## Conclusion
 ### Business Dashboard
 This report analyzes data from 4,424 students to identify key challenges faced by educational institutions, revealing a concerning dropout rate of 32.1%. Younger students (ages 17–23) are more prone to dropping out, likely due to academic unpreparedness and difficulty adjusting to college life. Financial factors also play a critical role, as students who paid their tuition in full had significantly higher graduation rates than those who did not. Academic background, particularly low admission grades, strongly correlates with dropout risk, as does poor performance in the first two semesters. Certain programs—such as Voluntary Nursing, Management, and Journalism—show higher dropout rates, potentially due to demanding curricula or lack of support. Overall, dropout is driven by a combination of financial hardship, weak academic foundations, and early academic struggles.
