@@ -84,10 +84,6 @@ The Business Dashboard is accessible via the following link:
 
 [View the Dashboard](https://lookerstudio.google.com/reporting/8bb1f9df-c52d-468d-8af9-43b153dceb96)
 
-For a detailed explanation of how to interpret and utilize the dashboard and detailed explanation of how to run and use the predictive model, please refer to:
-
-[View the Video](https://drive.google.com/file/d/1Z1fs-cgDznFc0qV9ydOC45Cw_Qj62DPY/view?usp=sharing)
-
 To interact with and test the predictive model, please refer to the following link:
 
 [View the Prediction Model](https://educational-institutions-challenges-analysis-abr8mnmkwfjv3r3fy.streamlit.app/)
